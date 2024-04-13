@@ -20,7 +20,7 @@ show = input('Show account id? (y/n): ')
 
 session = requests.Session()
 
-while True:
+def mine():
     for data in raw_data:
         headers = get_headers(data)
         response = session.get('https://bot.pocketfi.org/mining/getUserMining', headers=headers)
@@ -32,7 +32,15 @@ while True:
                 response = session.post('https://bot.pocketfi.org/mining/claimMining', headers=headers)
                 if response.status_code == 200:
                     print(f'{("[Account " + str(json["userId"]) + "]") if show == "y" else ""}Claimed {json["miningAmount"]} SWITCH')
-            time.sleep(30)
+            return
         else:
             print('Error: PocketFI is down. Received status code:', response.status_code)
-            time.sleep(5)
+            return
+        
+while True:
+    try:
+        mine()
+    except Exception as e:
+        print('Error:', e)
+    time.sleep(30)
+    
